@@ -1,0 +1,371 @@
+Chào Dũng, tôi hiểu ý tưởng của bạn. Chúng ta sẽ bỏ qua phong cách "robot / máy móc" thô cứng, và thay vào đó hướng đến một giao diện **Premium Digital Branding kết hợp Ethereal Glassmorphism**. Nó mang lại cảm giác điện ảnh, sang trọng, có chiều sâu, với các hiệu ứng ánh sáng mượt mà tương tác theo chuột nhưng vẫn giữ được sự thanh lịch của một portfolio học thuật.
+
+Dưới đây là bản mô tả chi tiết giao diện và bộ code hoàn chỉnh cho bạn.
+
+---
+
+### 1. Ý tưởng Thiết kế (Design Concept)
+
+Giao diện sẽ là một không gian kỹ thuật số liền mạch, tập trung vào chiều sâu và trải nghiệm tương tác của người dùng.
+
+* **Background (Nền):** Màu than đen (Deep Charcoal) làm chủ đạo. Một luồng ánh sáng gradient (tím/xanh neon) mềm mại sẽ di chuyển theo con trỏ chuột của người dùng, tạo cảm giác không gian luôn "sống động" nhưng không bị rối mắt.
+* **Chất liệu giao diện (Glassmorphism):** Các phần tử như thẻ thông tin (ID Card), thẻ bài tập (Modules) sẽ là các khối kính mờ (frosted glass) trong suốt, có viền sáng nhẹ. Khi hover, thẻ sẽ nổi lên và bắt sáng.
+* **Typography (Kiểu chữ):** Sử dụng phông chữ Sans-serif hiện đại (như Inter hoặc Montserrat). Các tiêu đề chính sẽ có hiệu ứng gradient chữ.
+* **Chuyển động (Animations):** * *Scroll Reveal:* Các phần tử sẽ mờ dần và trượt lên nhẹ nhàng khi cuộn trang (Parallax & Fade-in).
+* *Magnetic Hover:* Các nút bấm và thẻ bài tập có hiệu ứng hút chuột nhẹ.
+
+
+
+### 2. Cấu trúc Trải nghiệm Người dùng (UX Layout)
+
+1. **Khu vực Hero & ID Card:** Xuất hiện đầu tiên chiếm trọn màn hình. Phía trái là Thẻ thông tin cá nhân thiết kế như một thẻ căn cước Hologram. Phía phải là Mục tiêu học tập, nhấn mạnh vào tư duy phân tích từ vĩ mô đến vi mô trong việc làm chủ AI, thay vì chỉ dùng các thủ thuật bề mặt.
+2. **Khu vực Modules (6 Bài tập):** Bố cục dạng Grid 3x2. Mỗi thẻ đại diện cho một bài tập, có trạng thái tiến độ sáng đèn (Xanh lá = Hoàn thành). Khi click vào, khu vực nhúng PDF sẽ hiện ra một cách mượt mà.
+3. **Khu vực Reflection (Tổng kết):** Một không gian tĩnh lặng hơn. Cung cấp các thanh kỹ năng (Skill Bars) tự đổ đầy kèm theo một khung tự đánh giá xếp loại.
+
+---
+
+### 3. Mã Nguồn Hoàn Chỉnh (HTML / CSS / JS)
+
+Bạn hãy tạo một file `index.html` và dán toàn bộ đoạn code dưới đây vào. Tôi đã tích hợp sẵn CSS và JavaScript để tạo hiệu ứng ánh sáng theo chuột, giao diện kính, và hoạt ảnh cuộn trang.
+
+```html
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoàng Mạnh Dũng | Portfolio Kỹ Thuật Số</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap');
+
+        :root {
+            --bg-color: #050505;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-glow: #6a00ff;
+            --accent-glow-2: #00d2ff;
+            --text-main: #f0f0f0;
+            --text-muted: #a0a0a0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Hiệu ứng ánh sáng theo chuột */
+        #cursor-glow {
+            position: fixed;
+            top: 0; left: 0;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(106, 0, 255, 0.15) 0%, rgba(0, 210, 255, 0.05) 50%, transparent 80%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 0;
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Ambient Background */
+        .ambient-bg {
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(20, 20, 20, 1) 0%, rgba(5, 5, 5, 1) 100%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glassmorphism Utility */
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass-panel:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 30px rgba(106, 0, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        h1, h2, h3 { font-weight: 800; letter-spacing: -1px; }
+        .gradient-text {
+            background: linear-gradient(45deg, var(--accent-glow-2), #d400ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* 1 & 2. Hero & ID Card Section */
+        .hero-section {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            min-height: 80vh;
+            align-items: center;
+        }
+
+        .id-card {
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .id-card::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+            transform: skewX(-20deg); animation: shine 6s infinite;
+        }
+
+        @keyframes shine { 20% { left: 200%; } 100% { left: 200%; } }
+
+        .avatar-placeholder {
+            width: 150px; height: 150px;
+            border-radius: 50%;
+            background: #2a2a2a;
+            margin: 0 auto 1.5rem auto;
+            border: 2px solid var(--accent-glow);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; color: var(--text-muted);
+            /* Thay background-image: url('link-anh-cua-ban.jpg') vào đây */
+        }
+
+        .id-info p { margin-bottom: 0.5rem; font-size: 0.95rem; }
+        .id-info span { color: var(--text-muted); }
+
+        .hero-text h1 { font-size: 3.5rem; margin-bottom: 1.5rem; line-height: 1.1; }
+        .hero-text p { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1.5rem; }
+
+        /* 3. Modules Section */
+        .section-title { font-size: 2.5rem; margin: 6rem 0 3rem 0; text-align: center; }
+        
+        .modules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .module-card h3 { font-size: 1.4rem; margin-bottom: 1rem; }
+        .module-card p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem; min-height: 45px; }
+        
+        .status {
+            display: inline-block; padding: 0.3rem 0.8rem; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600; margin-bottom: 1rem;
+        }
+        .status.done { background: rgba(0, 255, 136, 0.1); color: #00ff88; border: 1px solid rgba(0, 255, 136, 0.3); }
+        .status.progress { background: rgba(255, 170, 0, 0.1); color: #ffaa00; border: 1px solid rgba(255, 170, 0, 0.3); }
+
+        .pdf-container {
+            width: 100%; height: 200px;
+            background: rgba(0,0,0,0.5);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            border: 1px dashed var(--text-muted);
+            font-size: 0.9rem;
+            transition: height 0.3s ease;
+        }
+
+        /* 4. Reflection Section */
+        .reflection-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+        }
+
+        .skill-bar-container { margin-bottom: 1.5rem; }
+        .skill-info { display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem; }
+        .skill-bar { width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden; }
+        .skill-fill { height: 100%; background: linear-gradient(90deg, var(--accent-glow-2), var(--accent-glow)); width: 0%; transition: width 1.5s ease-out; }
+
+        .final-grade {
+            text-align: center; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--glass-border);
+        }
+        .final-grade h2 { font-size: 4rem; text-transform: uppercase; }
+
+        /* Animation classes for JS */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 768px) {
+            .hero-section, .reflection-grid { grid-template-columns: 1fr; }
+            .hero-text h1 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg"></div>
+    <div id="cursor-glow"></div>
+
+    <div class="container">
+        <section class="hero-section reveal">
+            <div class="glass-panel id-card">
+                <div class="avatar-placeholder">[Upload Ảnh Tại Đây]</div>
+                <h2 class="gradient-text">Hoàng Mạnh Dũng</h2>
+                <div class="id-info" style="margin-top: 1.5rem; text-align: left;">
+                    <p><span>MSSV:</span> 25040049</p>
+                    <p><span>Khoá:</span> K59</p>
+                    <p><span>Ngành:</span> Sư phạm Tiếng Anh</p>
+                    <p><span>Khoa:</span> NNVHA</p>
+                    <p><span>Trường:</span> ULIS - VNU</p>
+                    <p><span>Học phần:</span> Nhập môn Công nghệ số & AI</p>
+                </div>
+            </div>
+
+            <div class="hero-text">
+                <h1>Hành trình <br><span class="gradient-text">Kiến tạo & Phân tích</span></h1>
+                <p>Mục tiêu học tập của portfolio này không chỉ là lưu trữ bài tập, mà là hệ thống hóa toàn bộ quá trình tôi tiếp cận với công nghệ số. Thay vì chỉ áp dụng các thủ thuật bề mặt, tôi hướng đến việc hiểu rõ cơ chế vận hành của AI từ vĩ mô đến vi mô, biến nó thành một công cụ bổ trợ đắc lực cho tư duy giáo dục và phát triển học liệu.</p>
+                <p>Dưới đây là hành trình từng bước làm chủ công nghệ, từ những khái niệm cơ bản nhất đến việc sáng tạo nội dung có trách nhiệm.</p>
+            </div>
+        </section>
+
+        <h2 class="section-title reveal gradient-text">Quá trình thực hành</h2>
+        <div class="modules-grid">
+            <div class="glass-panel module-card reveal">
+                <span class="status done">Hoàn thành</span>
+                <h3>01. Quản lý tệp và thư mục</h3>
+                <p>Tổ chức không gian lưu trữ số một cách có cấu trúc và logic, tối ưu hóa quá trình truy xuất dữ liệu.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 01]</span>
+                </div>
+            </div>
+
+            <div class="glass-panel module-card reveal">
+                <span class="status done">Hoàn thành</span>
+                <h3>02. Tìm kiếm và Đánh giá</h3>
+                <p>Áp dụng tư duy phản biện để chắt lọc, phân tích và đánh giá độ tin cậy của các nguồn thông tin học thuật và đại chúng.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 02]</span>
+                </div>
+            </div>
+
+            <div class="glass-panel module-card reveal">
+                <span class="status done">Hoàn thành</span>
+                <h3>03. Viết Prompt hiệu quả</h3>
+                <p>Nghiên cứu kỹ thuật Prompt Engineering, cung cấp bối cảnh và yêu cầu chi tiết để điều hướng AI tạo ra kết quả chính xác.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 03]</span>
+                </div>
+            </div>
+
+            <div class="glass-panel module-card reveal">
+                <span class="status done">Hoàn thành</span>
+                <h3>04. Hợp tác trực tuyến</h3>
+                <p>Sử dụng các công cụ làm việc nhóm trên nền tảng đám mây để phân chia nhiệm vụ và đồng bộ hóa tiến độ dự án.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 04]</span>
+                </div>
+            </div>
+
+            <div class="glass-panel module-card reveal">
+                <span class="status progress">Đang thực hiện</span>
+                <h3>05. Sáng tạo nội dung với AI</h3>
+                <p>Ứng dụng AI như một người đồng sáng tạo trong việc thiết kế giáo án và xây dựng hệ thống học liệu sinh động.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 05]</span>
+                </div>
+            </div>
+
+            <div class="glass-panel module-card reveal">
+                <span class="status progress">Đang thực hiện</span>
+                <h3>06. AI có trách nhiệm</h3>
+                <p>Nhìn nhận các khía cạnh đạo đức, bảo mật thông tin và trách nhiệm của người học trong thời đại trí tuệ nhân tạo.</p>
+                <div class="pdf-container">
+                    <span>[Nhúng PDF Bài 06]</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title reveal gradient-text">Tổng kết & Đánh giá</h2>
+        <section class="glass-panel reveal reflection-grid">
+            <div>
+                <h3>Cảm nghĩ & Kỹ năng</h3>
+                <p style="margin-top: 1rem; color: var(--text-muted);">
+                    Trải qua học phần này, sự thay đổi lớn nhất đối với tôi không chỉ là biết dùng công cụ mới, mà là việc thay đổi tư duy làm việc. Tôi học được cách tư duy có hệ thống hơn. Kỹ năng quan trọng nhất tôi nhận được là <strong>"Kỹ năng đặt câu hỏi và điều hướng hệ thống (Prompting & System Navigation)"</strong> – nó giúp tôi bóc tách vấn đề lớn thành những yêu cầu nhỏ gọn, rõ ràng.
+                </p>
+                
+                <div class="final-grade">
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Tự đánh giá kết quả học tập</p>
+                    <h2 class="gradient-text">TỐT</h2>
+                </div>
+            </div>
+
+            <div>
+                <h3 style="margin-bottom: 1.5rem;">Khung chấm điểm kỹ năng</h3>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-info"><span>Tư duy phân tích công cụ</span> <span>90%</span></div>
+                    <div class="skill-bar"><div class="skill-fill" data-width="90%"></div></div>
+                </div>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-info"><span>Viết Prompt & Tương tác AI</span> <span>85%</span></div>
+                    <div class="skill-bar"><div class="skill-fill" data-width="85%"></div></div>
+                </div>
+                
+                <div class="skill-bar-container">
+                    <div class="skill-info"><span>Nghiên cứu & Đánh giá thông tin</span> <span>88%</span></div>
+                    <div class="skill-bar"><div class="skill-fill" data-width="88%"></div></div>
+                </div>
+
+                <div class="skill-bar-container">
+                    <div class="skill-info"><span>Tổ chức dữ liệu & Hợp tác</span> <span>80%</span></div>
+                    <div class="skill-bar"><div class="skill-fill" data-width="80%"></div></div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Hiệu ứng ánh sáng đi theo chuột
+        const cursorGlow = document.getElementById('cursor-glow');
+        document.addEventListener('mousemove', (e) => {
+            cursorGlow.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+        });
+
+        // Hiệu ứng Scroll Reveal và chạy thanh kỹ năng
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            var windowHeight = window.innerHeight;
+            
+            reveals.forEach(element => {
+                var elementTop = element.getBoundingClientRect().top;
+                var elementVisible = 100;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add("active");
+                    
+                    // Kích hoạt thanh kỹ năng chạy khi cuộn tới
+                    let skillFills = element.querySelectorAll('.skill-fill');
+                    if(skillFills.length > 0) {
+                        skillFills.forEach(fill => {
+                            fill.style.width = fill.getAttribute('data-width');
+                        });
+                    }
+                }
+            });
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Kích hoạt lần đầu khi load trang
+        reveal();
+    </script>
+</body>
+</html>
+
+```
